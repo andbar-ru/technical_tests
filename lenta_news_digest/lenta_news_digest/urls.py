@@ -13,6 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import sys
+
+from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 
@@ -22,3 +25,8 @@ urlpatterns = [
     url(r'^digest/', include('digest.urls')),
     url(r'^$', 'digest.views.index'),
 ]
+
+if settings.DEBUG is False and 'runserver' in sys.argv:
+    urlpatterns.append(url(r'^static/(?P<path>.*)$',
+                           'django.views.static.serve',
+                           {'document_root':settings.STATIC_ROOT}))

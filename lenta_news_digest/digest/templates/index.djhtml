@@ -15,30 +15,29 @@
   <h3>Форма отправки дайджеста на email</h3>
   <form id="send_digest_to_email" method="post" action="/digest/send_digest_to_email" target="blank">
     {% csrf_token %}
-    <div class="table">
-      <div class="table-row">
-        <div class="table-cell"><label for="category">Категории:</label></div>
-        <div class="table-cell">
-          <select name="category" size="5" multiple>
-            <option selected value="all">----Все----</option>
-           {% for category in categories %}
-            <option value="{{ category }}">{{ category }}</option>
-           {% endfor %}
-          </select>
-        </div>
-      </div>
-      <div>За период:</div>
-      <div class="table-row">
+    <div class="field">
+      <h4>Категории:</h4>
+      <div><input type="checkbox" name="category" value="all" checked/>&nbsp;Все</div>
+      {% for category in categories %}
+       <div><input type="checkbox" name="category" value="{{ category }}"/>&nbsp;{{ category }}</div>
+      {% endfor %}
+    </div>
+    <div class="field">
+      <h4>Даты:</h4>
+      <div>
         <label for="date_from">с:</label>
         <input name="date_from" type="date" value="{{ today }}" min="{{ min_date }}" max="{{ max_date }}"/>
       </div>
-      <div class="table-row">
+      <div>
         <label for="date_from">по:</label>
         <input name="date_to" type="date" value="{{ today }}" min="{{ min_date }}" max="{{ max_date }}"/>
       </div>
-      <div class="table-row"><input name="email" type="email" size="30" placeholder="Введите email"/></div>
-      <div class="table-row"><input type="submit" value="Отправить"/></div>
     </div>
+    <div class="field">
+      <h4>Email:</h4>
+      <div><input name="email" type="email" size="30" placeholder="Введите email"/></div>
+    </div>
+    <div class="field"><input type="submit" value="Отправить"/></div>
     <p id="response"></p>
   </form>
 </div>
