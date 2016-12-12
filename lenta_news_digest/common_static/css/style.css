@@ -1,0 +1,58 @@
+body {
+  font-family: "Tahoma", sans-serif;
+  font-size: 10pt;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Arial", sans-serif;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.success {
+  color: green;
+}
+.fail {
+  color: red;
+}
+
+.right {
+  width: 300px;
+  float: right;
+}
+
+.content {
+  margin-right: 310px;
+}
+.table {
+  display: table;
+}
+.table-row {
+  display: table-row;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.table-cell {
+  display: table-cell;
+  vertical-align: top;
+  float: left;
+}
+label {
+  margin-right: 10px;
+}
+.new {
+  margin-bottom: 10px;
+}
+.new p {
+  margin: 0;
+}
+.pub_date {
+  font-size: 0.9em;
+  color: gray;
+}
+.title {
+  font-weight: bold;
+}
+

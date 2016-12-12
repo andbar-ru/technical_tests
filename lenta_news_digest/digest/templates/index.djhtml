@@ -1,0 +1,60 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>Дайджест новостей с сайта lenta.ru</title>
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/digest.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"
+</head>
+
+<body>
+<div class="right">
+  <h3>Форма отправки дайджеста на email</h3>
+  <form id="send_digest_to_email" method="post" action="/digest/send_digest_to_email" target="blank">
+    {% csrf_token %}
+    <div class="table">
+      <div class="table-row">
+        <div class="table-cell"><label for="category">Категории:</label></div>
+        <div class="table-cell">
+          <select name="category" size="5" multiple>
+            <option selected value="all">----Все----</option>
+           {% for category in categories %}
+            <option value="{{ category }}">{{ category }}</option>
+           {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div>За период:</div>
+      <div class="table-row">
+        <label for="date_from">с:</label>
+        <input name="date_from" type="date" value="{{ today }}" min="{{ min_date }}" max="{{ max_date }}"/>
+      </div>
+      <div class="table-row">
+        <label for="date_from">по:</label>
+        <input name="date_to" type="date" value="{{ today }}" min="{{ min_date }}" max="{{ max_date }}"/>
+      </div>
+      <div class="table-row"><input name="email" type="email" size="30" placeholder="Введите email"/></div>
+      <div class="table-row"><input type="submit" value="Отправить"/></div>
+    </div>
+    <p id="response"></p>
+  </form>
+</div>
+<div class="content">
+ <h1>Дайджест новостей (5 последних в каждой категории)</h1>
+ {% for category, news in news_categories.items %}
+  <h2>{{ category }}</h2>
+  {% for new in news %}
+   <div class="new">
+    <p class="pub_date">{{ new.pub_date|date:"d.m.Y H:i" }}</p>
+    <p class=title>{{ new.title }}</p>
+    <p class="description">{{ new.description }}&nbsp;<a href="{{ new.link }}" target="blank">&gt;&gt;&gt;</a></p>
+   </div>
+  {% endfor %}
+ {% endfor %}
+</div>
+</body>
+
+</html>
