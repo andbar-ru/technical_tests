@@ -12,11 +12,15 @@ import (
 	"booking_app/internal/utils"
 )
 
+// A Webservice represents web service
 type Webservice struct {
+	// order handler
 	OrderHandler *usecases.OrderHandler
-	Logger       usecases.Logger
+	// logger
+	Logger usecases.Logger
 }
 
+// NewWebservice returns a new web service provided by orderHandler and logger passed as arguments.
 func NewWebservice(orderHandler *usecases.OrderHandler, logger usecases.Logger) *Webservice {
 	return &Webservice{
 		OrderHandler: orderHandler,
@@ -24,6 +28,9 @@ func NewWebservice(orderHandler *usecases.OrderHandler, logger usecases.Logger) 
 	}
 }
 
+// CreateOrder creates new order according to reqest body.
+// If successed responses with new order and status 201.
+// If failed responses with errors and some erroneous status.
 func (service Webservice) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	var newOrder entities.Order
 	err := json.NewDecoder(r.Body).Decode(&newOrder)
@@ -56,6 +63,7 @@ func (service Webservice) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	service.Logger.Info("Order successfully created: %v", newOrder)
 }
 
+// handleErrors responses with given errors and some erroneous status.
 func (service Webservice) handleErrors(w http.ResponseWriter, errs []error, status int) {
 	w.Header().Set("Content-Type", "application/json")
 	msgs := make([]string, len(errs))

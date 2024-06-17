@@ -8,10 +8,12 @@ import (
 	"booking_app/internal/entities"
 )
 
+// Date returns a Date object by given year, month and day.
 func Date(year, month, day int) entities.Date {
 	return entities.Date{Time: time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)}
 }
 
+// Uuid return new uuid v4.
 func Uuid() string {
 	b := make([]byte, 16)
 	_, err := rand.Read(b)

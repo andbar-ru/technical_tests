@@ -20,12 +20,17 @@ var availability = []entities.RoomAvailability{
 
 var storeHandler *StoreHandler
 
+// StoreHandler represents realization of StoreHandler interface.
 type StoreHandler struct {
-	Mux              sync.Mutex
-	Orders           []entities.Order
+	// Mutex for concurrent-safe write operations.
+	Mux sync.Mutex
+	// orders
+	Orders []entities.Order
+	// room availability items
 	RoomAvailability []entities.RoomAvailability
 }
 
+// NewStoreHandler return a new instance of StoreHandler if it doesn't exist else returns existing instance.
 func NewStoreHandler() *StoreHandler {
 	if storeHandler != nil {
 		return storeHandler
@@ -38,14 +43,17 @@ func NewStoreHandler() *StoreHandler {
 	return storeHandler
 }
 
+// GetOrders return all orders.
 func (h *StoreHandler) GetOrders() []entities.Order {
 	return h.Orders
 }
 
+// GetRoomAvailability returns all availability items.
 func (h *StoreHandler) GetRoomAvailability() []entities.RoomAvailability {
 	return h.RoomAvailability
 }
 
+// AddOrder appends new order to existing orders.
 func (h *StoreHandler) AddOrder(order entities.Order) {
 	h.Mux.Lock()
 	defer h.Mux.Unlock()
@@ -53,6 +61,7 @@ func (h *StoreHandler) AddOrder(order entities.Order) {
 	h.Orders = append(h.Orders, order)
 }
 
+// GetRoomAvailabilityById returns availability item with id specified by `id` argument.
 func (h *StoreHandler) GetRoomAvailabilityById(id string) entities.RoomAvailability {
 	for _, item := range h.RoomAvailability {
 		if item.ID == id {
@@ -63,6 +72,9 @@ func (h *StoreHandler) GetRoomAvailabilityById(id string) entities.RoomAvailabil
 	return zero
 }
 
+// UpdateRoomAvailability replaces availability item, specified by `id` argument with new item,
+// specified by roomAvailability argument. Return AppError, if store doesn't contain availability
+// item with given id.
 func (h *StoreHandler) UpdateRoomAvailability(id string, roomAvailability entities.RoomAvailability) error {
 	h.Mux.Lock()
 	defer h.Mux.Unlock()

@@ -7,6 +7,7 @@ import (
 	"booking_app/internal/usecases"
 )
 
+// A StoreHandler represents interface for store.
 type StoreHandler interface {
 	GetOrders() []entities.Order
 	GetRoomAvailability() []entities.RoomAvailability
@@ -15,37 +16,38 @@ type StoreHandler interface {
 	UpdateRoomAvailability(id string, roomAvailability entities.RoomAvailability) error
 }
 
+// A StoreRepository represents repository with StoreHandler as its store handler.
 type StoreRepository struct {
+	// store handler
 	storeHandler StoreHandler
-}
-
-func NewStoreRepository(storeHandler StoreHandler) *StoreRepository {
-	return &StoreRepository{
-		storeHandler: storeHandler,
-	}
 }
 
 type StoreOrderRepository StoreRepository
 
+// NewStoreOrderRepository returns a new StoreOrderRepository provided by storeHandler passed as argument.
 func NewStoreOrderRepository(storeHandler StoreHandler) *StoreOrderRepository {
 	return &StoreOrderRepository{
 		storeHandler: storeHandler,
 	}
 }
 
+// HasTransactions returns false as StoreOrderRepository doesn't support transactions.
 func (repo *StoreOrderRepository) HasTransactions() bool {
 	return false
 }
 
+// BeginTransaction returns nil as StoreOrderRepository doesn't support transactions.
 func (repo *StoreOrderRepository) BeginTransaction() usecases.Transaction {
 	return nil
 }
 
+// AddOrder adds an order to store.
 func (repo *StoreOrderRepository) AddOrder(order entities.Order) error {
 	repo.storeHandler.AddOrder(order)
 	return nil
 }
 
+// FindOrdersByEmail searches orders by user email and returns found or empty slice if could not find.
 func (repo *StoreOrderRepository) FindOrdersByEmail(email string) []entities.Order {
 	allOrders := repo.storeHandler.GetOrders()
 	var orders []entities.Order
@@ -57,6 +59,8 @@ func (repo *StoreOrderRepository) FindOrdersByEmail(email string) []entities.Ord
 	return orders
 }
 
+// ChangeRoomAvailabilityQuota increments or decrements room availability, specified by its id,
+// quota by delta. If no items with given id or quota is not enough, returns AppError.
 func (repo *StoreOrderRepository) ChangeRoomAvailabilityQuota(id string, delta int) error {
 	var zeroRoomAvailability entities.RoomAvailability
 	roomAvailability := repo.storeHandler.GetRoomAvailabilityById(id)
@@ -71,6 +75,8 @@ func (repo *StoreOrderRepository) ChangeRoomAvailabilityQuota(id string, delta i
 	return nil
 }
 
+// FindRoomAvailabilityByHotelAndRoom searches room availability items by given hotelID and roomID.
+// For convenience returns map of date to room availability item.
 func (repo *StoreOrderRepository) FindRoomAvailabilityByHotelAndRoom(hotelID, roomID string) map[entities.Date]entities.RoomAvailability {
 	roomAvailability := repo.storeHandler.GetRoomAvailability()
 	m := make(map[entities.Date]entities.RoomAvailability)
